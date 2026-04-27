@@ -1,11 +1,17 @@
 import Navbar from '@/components/shared/Navbar';
+import { Montserrat } from 'next/font/google';
 
+const montserrat = Montserrat({
+  variable: "--font-montserrat",
+  subsets: ["latin"],
+  weight: ['400', '500', '600', '700']
+})
 
-const AuthLayout = ({Children}) => {
+const AuthLayout = ({children}) => {
     return (
-        <div className={`${Montserrat.className}`}>
+        <div className={`${montserrat.className}`}>
             <Navbar></Navbar>
-            {Children}
+            {children}
         </div>
     );
 };

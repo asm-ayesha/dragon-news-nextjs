@@ -28,7 +28,7 @@ export default function RootLayout({ children }) {
       data-theme="light"
       className={` h-full antialiased`}
     >
-      <body className={`${poppins.className} min-h-full flex flex-col`}>
+      <body className={`${montserrat.className} ${poppins.variable} min-h-full flex flex-col`}>
         
         {children}
         
