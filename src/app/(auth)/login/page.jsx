@@ -1,49 +1,72 @@
 'use client'
 
+import { authClient } from '@/lib/auth-client';
 import Link from 'next/link';
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 const LoginPage = () => {
-    const {register, handleSubmit, watch, formState: { errors }}  = useForm()
+
+    const { register, handleSubmit, watch, formState: { errors } } = useForm()
+
+    const [isShowPassword, setIsShowPassword] =useState(false)
 
 
-    const handleLoginFunc =(data)=>{
+    const handleLoginFunc = async (data) => {
         console.log(data)
+
+        const { data: res, error } = await authClient.signIn.email({
+            email: data.email, // required
+            password: data.password, // required
+            rememberMe: true,
+            callbackURL: "/",
+        });
+
+        console.log(res, error)
     }
 
-    
+
     return (
         <div className='container mx-auto min-h-[80vh] flex justify-center items-center bg-slate-100'>
             <div className='p-4 rounded-xl bg-white'>
                 <h2 className='text-3xl font-bold mb-6'>Login your account</h2>
                 <form className='space-y-4' onSubmit={handleSubmit(handleLoginFunc)} >
                     <fieldset className="fieldset">
-                    <legend className="fieldset-legend">Email address</legend>
-                    <input type="email" className="input" placeholder="Enter your email address"
-                    {...register("email",  { required: " Email field is required"})}/> 
+                        <legend className="fieldset-legend">Email address</legend>
+                        <input type="email" className="input" placeholder="Enter your email address"
+                            {...register("email", { required: " Email field is required" })} />
 
-                    {
-                        errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>
-                    } 
-                </fieldset>
+                            
+
+                        {
+                            errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>
+                        }
+                    </fieldset>
 
 
-                    <fieldset className="fieldset">
-                    <legend className="fieldset-legend">Password</legend>
-                    <input  type="password" className="input" placeholder="Enter your password" {...register("pass",{required: "Password field is required"})}/> 
+                    <fieldset className="fieldset relative">
+                        <legend className="fieldset-legend">Password</legend>
+                        <input type={isShowPassword ? "text" :"password" }className="input" placeholder="Enter your password" {...register("password", { required: "Password field is required" })} />
 
-                    {
-                        errors.pass && <p className="text-red-500 text-sm">{errors.pass.message}</p>
-                    }
-                </fieldset>
+                        <span className="absolute right-2 top-4" onClick={() => setIsShowPassword(!isShowPassword)}>
+                            {
+                                isShowPassword? 
+                                <FaEye></FaEye> : <FaEyeSlash></FaEyeSlash>
+                            }
+                            </span>
 
-                <button className="btn w-full bg-slate-800 text-white ">Login</button>
+                        {
+                            errors.password && <p className="text-red-500 text-sm">{errors.password.message}</p>
+                        }
+                    </fieldset>
+
+                    <button className="btn w-full bg-slate-800 text-white ">Login</button>
                 </form>
 
-                <p className='mt-4'>Dont have an account? 
+                <p className='mt-4'>Dont have an account?
 
-                    <Link href={"/regsiter"} className='text-blue-500'>Register</Link>
+                    <Link href={"/register"} className='text-blue-500'>Register</Link>
                 </p>
             </div>
         </div>
